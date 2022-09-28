@@ -3,8 +3,3 @@ export class CreateCarDTO {
   age: number;
   breed: string;
 }
-
-export class UpdateCarDTO {
-  name: string;
-  age: number;
-}

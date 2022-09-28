@@ -8,12 +8,13 @@ import {
   Delete,
 } from '@nestjs/common';
 
-import { CreateCarDTO, UpdateCarDTO } from 'src/cars/DTO/create-car.dto';
+import { CreateCarDTO } from 'src/cars/DTO/create-cars.dto';
+import { UpdateCarDTO } from 'src/cars/DTO/update-cars.dto';
 import { CreateCar, UpdateCar } from 'src/cars/Interface/car.interface';
 
 import { CarService } from './cars.service';
 
-@Controller('api/car')
+@Controller('api/cars')
 export class CarController {
   constructor(private readonly carservice: CarService) {}
 
