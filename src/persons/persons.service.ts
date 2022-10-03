@@ -46,8 +46,8 @@ export class PersonsService {
     return { data: person, text: `This action updates a #${id} person` };
   }
 
-  remove(id: string) {
-    this.usersRepository.delete({ id });
+  async remove(id: string) {
+    await this.usersRepository.delete({ id });
     return { text: `This action removes a person with sucess` };
   }
 }
