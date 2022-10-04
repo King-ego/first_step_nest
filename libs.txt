@@ -1,0 +1,8 @@
+npm install --save @nestjs/swagger swagger-ui-express nestjs-typeorm-paginate
+npm install --save @nestjs/typeorm typeorm pg
+npm install --save @nestjs/config
+
+
+main.ts -> https://docs.nestjs.com/openapi/introduction
+
+docker -> docker exec -it d121c370415c bash
