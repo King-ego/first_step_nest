@@ -47,6 +47,8 @@ export class PersonsService {
       'h.update_at',
     ]);
 
+    queryBuilder.leftJoinAndSelect('h.animals', 'animals');
+
     queryBuilder.orderBy('h.id', 'ASC');
 
     const data = await paginate<Person>(queryBuilder, options);
@@ -54,9 +56,17 @@ export class PersonsService {
     return { data };
   }
 
-  public async findOne(id: string): Promise<{ data: Person; text: string }> {
-    const data = await this.person.findOneBy({ id });
-    return { data, text: `This action returns a #${id} person` };
+  public async findOne(id: string): Promise<{ data: Person[]; text: string }> {
+    // const data = await this.person.findOneBy({ id });
+    const data = await this.person.find({
+      relations: { animals: true },
+      where: { id },
+    });
+
+    return {
+      data,
+      text: `This action returns a #${id} person`,
+    };
   }
 
   public async update(

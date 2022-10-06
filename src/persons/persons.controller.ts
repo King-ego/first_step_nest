@@ -50,7 +50,7 @@ export class PersonsController {
   @ApiTags('Persons')
   protected findOne(
     @Param('id') id: string,
-  ): Promise<{ data: Person; text: string }> {
+  ): Promise<{ data: Person[]; text: string }> {
     return this.service.findOne(id);
   }
 

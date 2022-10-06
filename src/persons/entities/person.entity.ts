@@ -5,7 +5,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+
+import { Animal } from 'src/animals/entities/animal.entity';
 
 @Entity()
 export class Person extends BaseEntity {
@@ -26,6 +29,9 @@ export class Person extends BaseEntity {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(() => Animal, (animal) => animal.person)
+  animals: Animal[];
 
   @CreateDateColumn()
   create_at: Date;
