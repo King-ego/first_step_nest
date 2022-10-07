@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateAnimalDto } from './dto/create-animal.dto';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
+import { PutUpdadeAnimal } from './dto/put-update-animal.dto';
 import { Animal } from './entities/animal.entity';
 
 import {
@@ -60,6 +61,11 @@ export class AnimalsService {
       data: updateAnimalDto,
       text: `This action updates a #${id} animal`,
     };
+  }
+
+  public async updateselect(id: string, putUpdateAnimal: PutUpdadeAnimal) {
+    await this.animal.update(id, putUpdateAnimal);
+    return { data: putUpdateAnimal, text: 'animal update' };
   }
 
   public async remove(id: string): Promise<{ text: string }> {
