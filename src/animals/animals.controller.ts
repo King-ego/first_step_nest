@@ -6,8 +6,10 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiQuery } from '@nestjs/swagger';
+import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 
 import { AnimalsService } from './animals.service';
 import { CreateAnimalDto } from './dto/create-animal.dto';
@@ -21,6 +23,7 @@ export class AnimalsController {
 
   @Post()
   @ApiTags('Animals')
+  @ApiBody({ type: CreateAnimalDto })
   protected create(
     @Body() createAnimalDto: CreateAnimalDto,
   ): Promise<{ data: CreateAnimalDto; text: string }> {
@@ -29,8 +32,14 @@ export class AnimalsController {
 
   @Get()
   @ApiTags('Animals')
-  protected findAll() {
-    return this.animalsService.findAll();
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  protected findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 100,
+  ): Promise<{ data: Pagination<Animal, IPaginationMeta>; text: string }> {
+    limit = limit > 100 ? 100 : limit;
+    return this.animalsService.findAll({ page, limit });
   }
 
   @Get(':id')

@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 import { Person } from 'src/persons/entities/person.entity';
@@ -24,7 +25,10 @@ export class Animal extends BaseEntity {
   @Column()
   age: number;
 
-  @ManyToOne(() => Person, (person) => person.animals)
+  @ManyToOne(() => Person, (person) => person.animals, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn()
   person: Person;
 
   @CreateDateColumn()

@@ -5,6 +5,13 @@ import { CreateAnimalDto } from './dto/create-animal.dto';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
 import { Animal } from './entities/animal.entity';
 
+import {
+  Pagination,
+  paginate,
+  IPaginationOptions,
+  IPaginationMeta,
+} from 'nestjs-typeorm-paginate';
+
 @Injectable()
 export class AnimalsService {
   constructor(
@@ -18,8 +25,24 @@ export class AnimalsService {
     return { data, text: 'This action adds a new animal' };
   }
 
-  public async findAll() {
-    const data = await this.animal.find();
+  public async findAll(
+    option: IPaginationOptions,
+  ): Promise<{ data: Pagination<Animal, IPaginationMeta>; text: string }> {
+    const queryBuilder = this.animal.createQueryBuilder('a');
+
+    queryBuilder.select([
+      'a.id',
+      'a.name',
+      'a.type',
+      'a.age',
+      'a.create_at',
+      'a.update_at',
+    ]);
+
+    queryBuilder.orderBy('a.id', 'DESC');
+
+    const data = await paginate<Animal>(queryBuilder, option);
+
     return { data, text: `This action returns all animals` };
   }
 

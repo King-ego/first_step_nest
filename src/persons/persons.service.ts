@@ -49,7 +49,7 @@ export class PersonsService {
 
     queryBuilder.leftJoinAndSelect('h.animals', 'animals');
 
-    queryBuilder.orderBy('h.id', 'ASC');
+    queryBuilder.orderBy('h.create_at', 'DESC');
 
     const data = await paginate<Person>(queryBuilder, options);
 
@@ -81,7 +81,11 @@ export class PersonsService {
   }
 
   public async remove(id: string): Promise<{ text: string }> {
-    await this.person.delete({ id });
+    try {
+      await this.person.delete({ id });
+    } catch (error) {
+      console.log(error);
+    }
     return { text: `This action removes a #${id} person` };
   }
 }

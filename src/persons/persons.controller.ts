@@ -43,7 +43,7 @@ export class PersonsController {
     @Query('limit') limit = 100,
   ): Promise<{ data: Pagination<Person, IPaginationMeta> }> {
     limit = limit > 100 ? 100 : limit;
-    return this.service.findAll({ page, limit });
+    return this.service.findAll({ limit, page });
   }
 
   @Get(':id')
