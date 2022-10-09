@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  IPaginationOptions,
-  Pagination,
-  paginate,
-  IPaginationMeta,
-} from 'nestjs-typeorm-paginate';
+import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
 import { Person } from './entities/person.entity';
+import { Create, GetAll, GetOnly, Remove, Update } from './interface/person';
 
 @Injectable()
 export class PersonsService {
@@ -18,22 +14,12 @@ export class PersonsService {
     @InjectRepository(Person) private readonly person: Repository<Person>,
   ) {}
 
-  public async create(
-    createPersonDto: CreatePersonDto,
-  ): Promise<{ data: CreatePersonDto; text: string }> {
+  public async create(createPersonDto: CreatePersonDto): Promise<Create> {
     const data = await this.person.save(createPersonDto);
     return { data, text: 'create person sucess' };
   }
 
-  // public async findAll() {
-  //   const data = await this.person.find();
-  //   return { data, text: 'find all persons' };
-  // }
-
-  //typi : Promise<Pagination<Person>>
-  public async findAll(
-    options: IPaginationOptions,
-  ): Promise<{ data: Pagination<Person, IPaginationMeta> }> {
+  public async findAll(options: IPaginationOptions): Promise<GetAll> {
     const queryBuilder = this.person.createQueryBuilder('h');
 
     queryBuilder.select([
@@ -53,15 +39,33 @@ export class PersonsService {
 
     const data = await paginate<Person>(queryBuilder, options);
 
-    return { data };
+    return { data, text: `This action returns all person` };
   }
 
-  public async findOne(id: string): Promise<{ data: Person[]; text: string }> {
-    // const data = await this.person.findOneBy({ id });
-    const data = await this.person.find({
+  public async findOne(id: string): Promise<GetOnly> {
+    const data = await this.person.findOne({
       relations: { animals: true },
       where: { id },
     });
+
+    // const queryBuilder = this.person.createQueryBuilder('p');
+
+    // queryBuilder.where('p.id = :id', { id });
+
+    // queryBuilder.select([
+    //   'p.id',
+    //   'p.firstName',
+    //   'p.lastName',
+    //   'p.description',
+    //   'p.nation',
+    //   'p.isActive',
+    //   'p.create_at',
+    //   'p.update_at',
+    // ]);
+
+    // queryBuilder.leftJoinAndSelect('p.animals', 'animals');
+
+    // const data = await queryBuilder.getOne();
 
     return {
       data,
@@ -72,7 +76,7 @@ export class PersonsService {
   public async update(
     id: string,
     updatePersonDto: UpdatePersonDto,
-  ): Promise<{ data: UpdatePersonDto; text: string }> {
+  ): Promise<Update> {
     await this.person.update(id, updatePersonDto);
     return {
       data: updatePersonDto,
@@ -80,7 +84,7 @@ export class PersonsService {
     };
   }
 
-  public async remove(id: string): Promise<{ text: string }> {
+  public async remove(id: string): Promise<Remove> {
     try {
       await this.person.delete({ id });
     } catch (error) {

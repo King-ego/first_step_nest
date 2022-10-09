@@ -9,12 +9,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags, ApiQuery } from '@nestjs/swagger';
-import { Pagination, IPaginationMeta } from 'nestjs-typeorm-paginate';
 
 import { PersonsService } from './persons.service';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
-import { Person } from './entities/person.entity';
+import { Create, GetAll, GetOnly, Remove, Update } from './interface/person';
 
 @Controller('api/persons')
 export class PersonsController {
@@ -22,17 +21,9 @@ export class PersonsController {
 
   @Post()
   @ApiTags('Persons')
-  protected create(
-    @Body() createPersonDto: CreatePersonDto,
-  ): Promise<{ data: CreatePersonDto; text: string }> {
+  protected create(@Body() createPersonDto: CreatePersonDto): Promise<Create> {
     return this.service.create(createPersonDto);
   }
-
-  // @Get()
-  // @ApiTags('Persons')
-  // protected findAll() {
-  //   return this.service.findAll();
-  // }
 
   @Get()
   @ApiTags('Persons')
@@ -41,16 +32,14 @@ export class PersonsController {
   protected findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 100,
-  ): Promise<{ data: Pagination<Person, IPaginationMeta> }> {
+  ): Promise<GetAll> {
     limit = limit > 100 ? 100 : limit;
     return this.service.findAll({ limit, page });
   }
 
   @Get(':id')
   @ApiTags('Persons')
-  protected findOne(
-    @Param('id') id: string,
-  ): Promise<{ data: Person[]; text: string }> {
+  protected findOne(@Param('id') id: string): Promise<GetOnly> {
     return this.service.findOne(id);
   }
 
@@ -59,13 +48,13 @@ export class PersonsController {
   protected update(
     @Param('id') id: string,
     @Body() updatePersonDto: UpdatePersonDto,
-  ): Promise<{ data: UpdatePersonDto; text: string }> {
+  ): Promise<Update> {
     return this.service.update(id, updatePersonDto);
   }
 
   @Delete(':id')
   @ApiTags('Persons')
-  protected remove(@Param('id') id: string): Promise<{ text: string }> {
+  protected remove(@Param('id') id: string): Promise<Remove> {
     return this.service.remove(id);
   }
 }
