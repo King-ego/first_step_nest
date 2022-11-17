@@ -1,0 +1,13 @@
+npm install -D prisma
+npx prisma init
+
+npx prisma migrate dev --name init --MIGRAR O BANCO
+
+nest g module prisma
+nest g service prisma
+
+-- npx prima studio
+
+npm i @nestjs/passport @nestjs/jwt bcrypt class-validator class-transformer passport passport-jwt passport-local
+
+npm i -D @types/passport-jwt @types/passport-local @types/bcrypt
