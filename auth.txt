@@ -1,0 +1,9 @@
+npm install --save @nestjs/passport passport passport-local
+npm install --save-dev @types/passport-local
+
+nest g module auth
+nest g service auth
+
+nest g module users
+nest g service users
+
